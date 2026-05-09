@@ -11,25 +11,25 @@ let currentDetalle        = [];
 // =========================================================
 // CONFIGURACIÓN GLOBAL CHART.JS
 // =========================================================
-Chart.defaults.color       = '#8b95a5';
+Chart.defaults.color       = '#bbbbbb';
 Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
-Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+Chart.defaults.font.family = "'Inter', sans-serif";
 
 const TOOLTIP_CFG = {
-    backgroundColor: 'rgba(10,14,23,0.95)',
-    titleColor: '#00f0ff',
-    bodyColor:  '#e8edf5',
-    titleFont:  { family: "'Orbitron', sans-serif", size: 12 },
-    bodyFont:   { size: 13 },
-    borderColor: 'rgba(0,240,255,0.4)',
+    backgroundColor: 'rgba(0,0,0,0.95)',
+    titleColor: '#FF6600',
+    bodyColor:  '#eeeeee',
+    titleFont:  { family: "'Inter', sans-serif", size: 12, weight: '600' },
+    bodyFont:   { size: 12 },
+    borderColor: 'rgba(255,102,0,0.4)',
     borderWidth: 1,
     padding: 12,
     displayColors: false,
 };
-const ANIM_CFG   = { duration: 1500, easing: 'easeOutQuart' };
+const ANIM_CFG   = { duration: 1400, easing: 'easeOutQuart' };
 const SCALE_DARK = {
-    grid:  { color: 'rgba(255,255,255,0.04)' },
-    ticks: { color: '#6b7688', font: { size: 11 } },
+    grid:  { color: 'rgba(255,255,255,0.06)' },
+    ticks: { color: '#aaaaaa', font: { size: 11, family: "'Inter', sans-serif" } },
 };
 
 // =========================================================
@@ -50,16 +50,16 @@ function renderVentasCategoria(data) {
             labels: data.map(d => d.categoria),
             datasets: [{
                 data: data.map(d => d.ventas),
-                backgroundColor: ['rgba(0,240,255,0.8)','rgba(180,77,255,0.8)','rgba(57,255,20,0.8)','rgba(255,107,43,0.8)'],
-                borderColor:     ['rgba(0,240,255,1)','rgba(180,77,255,1)','rgba(57,255,20,1)','rgba(255,107,43,1)'],
-                borderWidth: 2, hoverOffset: 12,
+                backgroundColor: ['#FF6600','#FF8533','#FFA366','#FFC299'],
+                borderColor:     ['#111','#111','#111','#111'],
+                borderWidth: 2, hoverOffset: 10,
             }],
         },
         options: {
             responsive: true,
             animation: { animateRotate: true, animateScale: true, duration: 1800 },
             plugins: {
-                legend: { position: 'right', labels: { color: '#8b95a5', padding: 14 } },
+                legend:  { position: 'right', labels: { color: '#cccccc', padding: 16, font: { size: 12 }, boxWidth: 12 } },
                 tooltip: TOOLTIP_CFG,
             },
         },
@@ -69,14 +69,14 @@ function renderVentasCategoria(data) {
 function renderGananciasRegion(data) {
     if (chartGananciasRegion) chartGananciasRegion.destroy();
     const ctx = document.getElementById('chartGananciasRegion').getContext('2d');
-    const grad = ctx.createLinearGradient(0,0,0,320);
-    grad.addColorStop(0,'rgba(180,77,255,0.85)');
-    grad.addColorStop(1,'rgba(180,77,255,0.1)');
+    const grad = ctx.createLinearGradient(0,0,0,280);
+    grad.addColorStop(0,'rgba(255,102,0,0.8)');
+    grad.addColorStop(1,'rgba(255,102,0,0.05)');
     chartGananciasRegion = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: data.map(d => d.region),
-            datasets: [{ label:'Ganancias ($)', data: data.map(d => d.ganancias), backgroundColor: grad, borderColor:'rgba(180,77,255,1)', borderWidth:2, borderRadius:6 }],
+            datasets: [{ label:'Ganancias ($)', data: data.map(d => d.ganancias), backgroundColor: grad, borderColor:'rgba(255,102,0,0.4)', borderWidth:1, borderRadius:4 }],
         },
         options: {
             responsive: true,
@@ -90,14 +90,14 @@ function renderGananciasRegion(data) {
 function renderEvolucionMensual(data) {
     if (chartEvolucionMensual) chartEvolucionMensual.destroy();
     const ctx = document.getElementById('chartEvolucionMensual').getContext('2d');
-    const grad = ctx.createLinearGradient(0,0,0,300);
-    grad.addColorStop(0,'rgba(255,107,43,0.4)');
-    grad.addColorStop(1,'rgba(255,107,43,0.01)');
+    const grad = ctx.createLinearGradient(0,0,0,280);
+    grad.addColorStop(0,'rgba(255,102,0,0.3)');
+    grad.addColorStop(1,'rgba(255,102,0,0.0)');
     chartEvolucionMensual = new Chart(ctx, {
         type: 'line',
         data: {
             labels: data.map(d => `${d.anio}-${String(d.mes).padStart(2,'0')}`),
-            datasets: [{ label:'Ventas ($)', data: data.map(d => d.ventas), borderColor:'rgba(255,107,43,1)', backgroundColor: grad, borderWidth:3, fill:true, tension:0.4, pointRadius:3, pointHoverRadius:6 }],
+            datasets: [{ label:'Ventas ($)', data: data.map(d => d.ventas), borderColor:'#FF6600', backgroundColor: grad, borderWidth:2, fill:true, tension:0.4, pointRadius:2, pointBackgroundColor:'#FF6600', pointHoverRadius:5 }],
         },
         options: {
             responsive: true,
@@ -111,18 +111,18 @@ function renderEvolucionMensual(data) {
 function renderTopProductos(data) {
     if (chartTopProductos) chartTopProductos.destroy();
     const ctx = document.getElementById('chartTopProductos').getContext('2d');
-    const grad = ctx.createLinearGradient(0,0,500,0);
-    grad.addColorStop(0,'rgba(57,255,20,0.15)');
-    grad.addColorStop(1,'rgba(57,255,20,0.85)');
+    const grad = ctx.createLinearGradient(0,0,400,0);
+    grad.addColorStop(0,'rgba(255,102,0,0.08)');
+    grad.addColorStop(1,'rgba(255,102,0,0.75)');
     chartTopProductos = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: data.map(d => d.producto.length > 22 ? d.producto.substring(0,22)+'…' : d.producto),
-            datasets: [{ label:'Ventas ($)', data: data.map(d => d.ventas), backgroundColor: grad, borderColor:'rgba(57,255,20,1)', borderWidth:2, borderRadius:5 }],
+            datasets: [{ label:'Ventas ($)', data: data.map(d => d.ventas), backgroundColor: grad, borderColor:'rgba(255,102,0,0.5)', borderWidth:1, borderRadius:3 }],
         },
         options: {
             indexAxis: 'y', responsive: true,
-            animation: { ...ANIM_CFG, delay: c => c.dataIndex * 100 },
+            animation: { ...ANIM_CFG, delay: c => c.dataIndex * 80 },
             plugins: { legend: { display: false }, tooltip: TOOLTIP_CFG },
             scales:  { x: { ...SCALE_DARK, beginAtZero: true }, y: SCALE_DARK },
         },
