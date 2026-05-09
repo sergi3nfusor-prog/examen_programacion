@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Orbitron:wght@700&display=swap');
+:root { --bg: #0a0e17; --glass: rgba(13, 17, 23, 0.7); --accent1: #00f0ff; --accent2: #b44dff; --text: #e8edf5; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); background: var(--bg) url('../img/bg.png') center/cover fixed; min-height: 100vh; padding: 20px; }
+.glass { background: var(--glass); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); transition: all 0.4s ease; }
+.glass-hover:hover, .kpi-card:hover, .chart-card:hover { border-color: rgba(0, 240, 255, 0.4); box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.05); transform: translateY(-3px); }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 15px 25px; }
+.header h1 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; background: linear-gradient(90deg, var(--accent1), var(--accent2)); -webkit-background-clip: text; color: transparent; animation: pulse 3s infinite; }
+.badge { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: #39ff14; padding: 5px 15px; border: 1px solid #39ff14; border-radius: 20px; background: rgba(57,255,20,0.1); }
+.filters { display: flex; gap: 15px; margin-bottom: 25px; padding: 20px; flex-wrap: wrap; align-items: flex-end; }
+.filter-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
+.filter-group label { font-size: 0.75rem; color: #8b95a5; font-weight: 600; text-transform: uppercase; }
+.filters select, .btn-filter { padding: 10px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.6); color: white; outline: none; font-family: inherit; transition: 0.3s; }
+.filters select:focus { border-color: var(--accent1); box-shadow: 0 0 10px rgba(0,240,255,0.3); }
+.btn-filter { background: linear-gradient(135deg, var(--accent1), var(--accent2)); border: none; cursor: pointer; font-weight: 800; letter-spacing: 1px; flex: 0 1 150px; }
+.btn-filter:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(0,240,255,0.5); }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px; }
+.kpi-card { padding: 20px; display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden; transition: 0.4s; }
+.kpi-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--accent1), transparent); }
+.kpi-icon { font-size: 2rem; margin-bottom: 5px; filter: drop-shadow(0 0 10px rgba(0,240,255,0.5)); }
+.kpi-label { font-size: 0.7rem; color: #8b95a5; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
+.kpi-value { font-size: 1.6rem; font-weight: 800; font-family: 'Orbitron', sans-serif; color: var(--accent1); }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(45%, 1fr)); gap: 20px; margin-bottom: 25px; }
+.chart-card { padding: 20px; transition: 0.3s; }
+.chart-title { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; color: #a0aec0; }
+.chart-title .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent1); box-shadow: 0 0 8px var(--accent1); }
+.table-section { padding: 20px; overflow-x: auto; margin-bottom: 40px; }
+.table-title { font-family: 'Orbitron', sans-serif; font-size: 1rem; margin-bottom: 15px; color: var(--accent1); display: flex; align-items: center; gap: 10px; }
+#tablaDatos { width: 100% !important; color: #e8edf5; border-collapse: collapse; }
+#tablaDatos th { background: rgba(0,240,255,0.1); color: var(--accent1); padding: 12px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; border-bottom: 2px solid rgba(0,240,255,0.3); }
+#tablaDatos td { padding: 12px; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+#tablaDatos tr:hover td { background: rgba(0,240,255,0.05); }
+.dataTables_wrapper { color: #8b95a5 !important; }
+.dataTables_wrapper select, .dataTables_wrapper input { background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 6px; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+@media (max-width: 768px) { .charts { grid-template-columns: 1fr; } .kpi-grid { grid-template-columns: 1fr 1fr; } .header { flex-direction: column; gap: 10px; text-align: center; } }
+
+/* ==================================
+   NOVEDADES: LOADING & OVERLAY
+================================== */
+.loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 14, 23, 0.85); backdrop-filter: blur(8px); z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+.loading-overlay.active { opacity: 1; visibility: visible; }
+.loader-content { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.spinner { width: 50px; height: 50px; border: 4px solid rgba(0, 240, 255, 0.1); border-left-color: var(--accent1); border-radius: 50%; animation: spin 1s linear infinite; box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
+.loading-text { font-family: 'Orbitron', sans-serif; color: var(--accent1); font-size: 1.2rem; letter-spacing: 2px; animation: pulseText 1.5s infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+@keyframes pulseText { 0%, 100% { opacity: 1; text-shadow: 0 0 10px var(--accent1); } 50% { opacity: 0.5; text-shadow: none; } }
+.glow-pulse { animation: glow-pulse 2s infinite; }
+@keyframes glow-pulse { 0%, 100% { box-shadow: 0 0 5px #39ff14; } 50% { box-shadow: 0 0 20px #39ff14; } }
+
+/* ==================================
+   NOVEDADES: CURSORES Y BOTÓN EXCEL
+================================== */
+.btn-excel { background: linear-gradient(135deg, #107c41, #18a558); }
+.btn-excel:hover { box-shadow: 0 0 20px rgba(24, 165, 88, 0.5); border-color: rgba(24, 165, 88, 0.4); }
+
+.glass-hover, .btn-filter, select, table.dataTable tbody tr { cursor: pointer !important; }

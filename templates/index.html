@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Analytics Dashboard</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <!-- Chart.js & DataTables -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    
+    <!-- CountUp.js para animaciones de números -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.8.0/countUp.umd.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <!-- OVERLAY DE CARGA (Loading Spinner) -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <div class="loading-text">CONSULTANDO DATOS...</div>
+        </div>
+    </div>
+
+    <header class="header glass">
+        <h1>🎮 GAMING ANALYTICS</h1>
+        <div class="badge glow-pulse">⚡ LIVE ESPORTS DATA</div>
+    </header>
+
+    <div class="filters glass glass-hover">
+        <div class="filter-group">
+            <label>📅 Año</label>
+            <select id="anio"><option value="">Todos</option>{% for a in anios %}<option value="{{a[0]}}">{{a[0]}}</option>{% endfor %}</select>
+        </div>
+        <div class="filter-group">
+            <label>🎭 Género</label>
+            <select id="genero"><option value="">Todos</option>{% for g in generos %}<option value="{{g[0]}}">{{g[0]}}</option>{% endfor %}</select>
+        </div>
+        <div class="filter-group">
+            <label>🕹️ Plataforma</label>
+            <select id="plataforma"><option value="">Todos</option>{% for p in plataformas %}<option value="{{p[0]}}">{{p[0]}}</option>{% endfor %}</select>
+        </div>
+        <div class="filter-group">
+            <label>🏢 Publisher</label>
+            <select id="publisher"><option value="">Todos</option>{% for pub in publishers %}<option value="{{pub[0]}}">{{pub[0]}}</option>{% endfor %}</select>
+        </div>
+        <button id="btnFiltrar" class="btn-filter">🚀 FILTRAR</button>
+        <button id="btnExportar" class="btn-filter btn-excel">📊 EXCEL</button>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card glass glass-hover"><div class="kpi-icon">💰</div><span class="kpi-label">Ventas Globales</span><span class="kpi-value" id="kpi-total-ventas">0</span></div>
+        <div class="kpi-card glass glass-hover"><div class="kpi-icon">🎯</div><span class="kpi-label">Total Juegos</span><span class="kpi-value" id="kpi-total-juegos">0</span></div>
+        <div class="kpi-card glass glass-hover"><div class="kpi-icon">🏆</div><span class="kpi-label">Género Top</span><span class="kpi-value" id="kpi-genero-top">—</span></div>
+        <div class="kpi-card glass glass-hover"><div class="kpi-icon">🕹️</div><span class="kpi-label">Plataforma Líder</span><span class="kpi-value" id="kpi-plataforma-top">—</span></div>
+        <div class="kpi-card glass glass-hover"><div class="kpi-icon">📅</div><span class="kpi-label">Año Récord</span><span class="kpi-value" id="kpi-anio-top">—</span></div>
+        <div class="kpi-card glass glass-hover"><div class="kpi-icon">🏢</div><span class="kpi-label">Publisher Top</span><span class="kpi-value" id="kpi-publisher-top">—</span></div>
+        <div class="kpi-card glass glass-hover"><div class="kpi-icon">📊</div><span class="kpi-label">Promedio Ventas</span><span class="kpi-value" id="kpi-promedio">0</span></div>
+        <div class="kpi-card glass glass-hover"><div class="kpi-icon">🚀</div><span class="kpi-label">Venta Máxima</span><span class="kpi-value" id="kpi-max-venta">0</span></div>
+    </div>
+
+    <div class="charts">
+        <div class="chart-card glass glass-hover">
+            <div class="chart-title"><span class="dot"></span>📊 Ventas Globales por Año</div>
+            <canvas id="chartVentasAnio"></canvas>
+        </div>
+        <div class="chart-card glass glass-hover">
+            <div class="chart-title"><span class="dot"></span>🎭 Ventas Globales por Género</div>
+            <canvas id="chartVentasGenero"></canvas>
+        </div>
+        <div class="chart-card glass glass-hover">
+            <div class="chart-title"><span class="dot"></span>🕹️ Top Plataformas</div>
+            <canvas id="chartVentasPlataforma"></canvas>
+        </div>
+        <div class="chart-card glass glass-hover">
+            <div class="chart-title"><span class="dot"></span>🌍 Distribución por Región</div>
+            <canvas id="chartVentasRegion"></canvas>
+        </div>
+    </div>
+
+    <div class="table-section glass glass-hover">
+        <div class="table-title">📋 Base de Datos de Juegos</div>
+        <table id="tablaDatos" class="display">
+            <thead>
+                <tr>
+                    <th>Rank</th><th>Nombre</th><th>Plataforma</th><th>Año</th><th>Género</th>
+                    <th>Publisher</th><th>Ventas (M)</th><th>Categoría</th><th>Región</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
